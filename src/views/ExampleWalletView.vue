@@ -220,6 +220,7 @@ const switchAccount = async () => {
 
 const isConnected = async () => {
   const accounts = await wallet.getAccounts();
+  await provider.send("eth_requestAccounts", []);
   address.value = accounts[0];
   initAccount();
   if (typeof accounts === "string") return false;
