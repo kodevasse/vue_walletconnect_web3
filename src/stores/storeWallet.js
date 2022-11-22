@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { ethers } from "ethers";
 // import {
 //   collection,
 //   onSnapshot,

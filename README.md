@@ -2,16 +2,18 @@
 
 ```sh
 
-Vue 3 + Vite
+Vue 3 + Vite:
 -Pinia state management
 -Vue router for SPA
 -Tailwind CSS
 -Daisy UI plugin
 -VueUse
 
+#Added 22.11.22 ->>
+-ethers.js
 
 
-
+Practical info:
 .env.env must be renamed to .env
 ```
 
