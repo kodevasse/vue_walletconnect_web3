@@ -28,12 +28,28 @@
         </p>
       </div>
     </div>
+    <button
+      class="btn btn-error mx-auto flex justify-center"
+      @click="storeWallet.disconnectWallet()"
+    >
+      disconnect
+    </button>
   </main>
 </template>
 
 <script setup>
-import { useLocalStorage, useMouse, usePreferredDark } from "@vueuse/core";
+import { useMouse, usePreferredDark } from "@vueuse/core";
 import { useStoreWallet } from "@/stores/storeWallet.js";
+
+// persist state in localStorage
+// const store = useStorage(
+//   "my-storage",
+//   {
+//     disconnected: null,
+//   },
+//   localStorage,
+//   { mergeDefaults: true } // <--
+// );
 
 const storeWallet = useStoreWallet();
 const { x, y } = useMouse();
@@ -43,11 +59,19 @@ storeWallet.initWallet();
 
 // Ethereum Window
 window.ethereum.on("accountsChanged", function (accounts) {
-  storeWallet.initWallet();
+  if (accounts.length !== 0) {
+    console.log(accounts);
+    storeWallet.initWallet();
+  } else {
+    console.log("disconnected", accounts);
+    localStorage.setItem("my-storage", "disconnected");
+
+    storeWallet.disconnectWallet();
+  }
   // Time to reload your interface with accounts[0]!
 });
 window.ethereum.on("chainChanged", function (chainId) {
-  window.location.reload();
+  storeWallet.netWorkChanged();
 });
 
 // // Force page refreshes on network changes
@@ -63,9 +87,4 @@ window.ethereum.on("chainChanged", function (chainId) {
 //         }
 //     });
 // }
-// persist state in localStorage
-const store = useLocalStorage("my-storage", {
-  name: "Apple",
-  color: "red",
-});
 </script>

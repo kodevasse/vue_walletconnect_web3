@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ethers } from "ethers";
+
 // import {
 //   collection,
 //   onSnapshot,
@@ -21,7 +22,7 @@ export const useStoreWallet = defineStore("storeWallet", {
   state: () => {
     return {
       wallet: {
-        accounts: "",
+        accounts: [],
         address: "",
         balance: 0,
         chainId: null,
@@ -32,6 +33,7 @@ export const useStoreWallet = defineStore("storeWallet", {
       walletLoaded: false,
       walletNotFound: false,
       isConnected: null,
+      manualDisconnect: false,
       shortBalance: function () {
         if (this.wallet.balance.length !== 0) {
           return this.wallet.balance.toFixed(4);
@@ -40,12 +42,16 @@ export const useStoreWallet = defineStore("storeWallet", {
         }
       },
       shortAddress: function () {
-        if (this.wallet.address.length > 2) {
-          return (
-            this.wallet.address.slice(1, 6) +
-            "........." +
-            this.wallet.address.slice(35, 42)
-          );
+        if (this.wallet.address !== undefined) {
+          if (this.wallet.address.length > 2) {
+            return (
+              this.wallet.address.slice(1, 6) +
+              "........." +
+              this.wallet.address.slice(35, 42)
+            );
+          } else {
+            return "";
+          }
         } else {
           return "";
         }
@@ -54,26 +60,45 @@ export const useStoreWallet = defineStore("storeWallet", {
   },
   actions: {
     async initWallet() {
+      const manualDisconnected = localStorage.getItem(
+        "my-storage",
+        "disconnected"
+      );
+      console.log(manualDisconnected);
       // Ethers get signer and provider
       if (window.ethereum) {
         (this.provider = await new ethers.providers.Web3Provider(
-          window.ethereum
+          window.ethereum,
+          "any"
         )),
           console.log(`Wallet found: ${this.provider.connection.url}`);
         this.signer = await this.provider.getSigner();
 
         // checking if connected
         this.isConnected = async () => {
-          this.wallet.accounts = await this.provider.send(
-            "eth_requestAccounts",
-            []
+          // this.wallet.accounts = await this.provider.send(
+          //   "eth_requestAccounts",
+          //   []
+          // );
+          const provider = await new ethers.providers.Web3Provider(
+            window.ethereum
           );
-          this.wallet.address = this.wallet.accounts[0];
-          this.initAccount();
-          this.walletLoaded = true;
-          // initAccount();
-          if (typeof this.wallet.accounts === "string") return false;
-          return this.wallet.accounts.length > 0;
+          const accounts = await provider.listAccounts();
+          if (accounts.length !== 0 && !manualDisconnected) {
+            console.log("accounts", accounts[0]);
+            this.wallet.accounts = accounts;
+            this.wallet.address = this.wallet.accounts[0];
+            this.initAccount();
+            localStorage.removeItem("my-storage", "disconnected");
+            this.walletLoaded = true;
+            console.log();
+            // initAccount();
+
+            if (typeof accounts === "string") return false;
+            return accounts.length > 0;
+          } else {
+            console.log("no account pre approved");
+          }
         };
       } else {
         this.walletNotFound = true;
@@ -81,6 +106,11 @@ export const useStoreWallet = defineStore("storeWallet", {
       this.isConnected();
     },
     async connectWallet() {
+      const manualDisconnected = localStorage.getItem(
+        "my-storage",
+        "disconnected"
+      );
+      console.log(manualDisconnected);
       this.walletLoaded = false;
 
       this.wallet.accounts = await this.provider.send(
@@ -92,6 +122,7 @@ export const useStoreWallet = defineStore("storeWallet", {
       }
       this.wallet.address = this.wallet.accounts[0];
       this.initAccount();
+      localStorage.removeItem("my-storage", "disconnected");
       this.walletLoaded = true;
     },
     // Init the account information
@@ -114,11 +145,11 @@ export const useStoreWallet = defineStore("storeWallet", {
       // // Force page refreshes on network changes
 
       // The "any" network will allow spontaneous network changes
-      const provider = new ethers.providers.Web3Provider(
-        window.ethereum,
-        "any"
-      );
-      provider.on("network", (newNetwork, oldNetwork) => {
+      // const provider = new ethers.providers.Web3Provider(
+      //   window.ethereum,
+      //   "any"
+      // );
+      this.provider.on("network", (newNetwork, oldNetwork) => {
         // When a Provider makes its initial connection, it emits a "network"
         // event with a null oldNetwork along with the newNetwork. So, if the
         // oldNetwork exists, it represents a changing network
@@ -126,6 +157,19 @@ export const useStoreWallet = defineStore("storeWallet", {
           window.location.reload();
         }
       });
+    },
+    async disconnectWallet() {
+      this.wallet.accounts = [];
+      this.wallet.address = "";
+      this.wallet.balance = 0;
+      this.wallet.chainId = null;
+      this.wallet.chainName = "";
+
+      this.walletLoaded = false;
+      this.walletNotFound = false;
+      this.isConnected = null;
+      this.manualDisconnect = true;
+      localStorage.setItem("my-storage", "disconnected");
     },
     clearTodos() {},
     async addTodo(content) {},
