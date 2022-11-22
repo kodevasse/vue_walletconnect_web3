@@ -1,6 +1,13 @@
-# vue_walletconnect_web3
+# vue_walletconnect_web3 --- "ONGOING WORK" - Boilerplate for Web3 with Vue
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3 + Vite
+-Pinia state management
+-Vue router for SPA
+-Tailwind CSS
+-Daisy UI plugin
+-VueUse
+
+.env.env must be renamed to .env
 
 ## Recommended IDE Setup
 
