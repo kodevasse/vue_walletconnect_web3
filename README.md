@@ -9,6 +9,9 @@ Vue 3 + Vite
 -Daisy UI plugin
 -VueUse
 
+
+
+
 .env.env must be renamed to .env
 ```
 

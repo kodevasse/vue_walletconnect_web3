@@ -1,51 +1,44 @@
 import { defineStore } from "pinia";
-import {
-  collection,
-  onSnapshot,
-  doc,
-  deleteDoc,
-  updateDoc,
-  addDoc,
-  query,
-  orderBy,
-} from "firebase/firestore";
-import { db } from "@/js/firebase";
-import { useStoreAuth } from "@/stores/storeAuth";
+// import {
+//   collection,
+//   onSnapshot,
+//   doc,
+//   deleteDoc,
+//   updateDoc,
+//   addDoc,
+//   query,
+//   orderBy,
+// } from "firebase/firestore";
+// import { db } from "@/js/firebase";
+// import { useStoreAuth } from "@/stores/storeAuth";
 
-let todosCollectionRef = [];
-let todosCollectionQuery = [];
-let getTodosSnapshot = null;
+// let todosCollectionRef = [];
+// let todosCollectionQuery = [];
+// let getTodosSnapshot = null;
 
-export const useStoreTodos = defineStore("storeTodos", {
+export const useStoreWallet = defineStore("storeWallet", {
   state: () => {
     return {
-      todos: [
-        // {
-        //   id: 1,
-        //   priority: 1,
-        //   content: "Destroy The World??",
-        //   reward: 500,
-        //   category: "Per",
-        //   isfav: false,
-        //   done: false,
-        //   duedate: "01.01.2022",
-        //   datecreated: "01.01.2021",
-        // },
+      wallet: [
+        {
+          accounts: [2, 1],
+          address: 1,
+          balance: 0,
+          chainId: 0,
+          chainName: "",
+        },
       ],
-      todosLoaded: false,
+      walletLoaded: false,
     };
   },
   actions: {
     init() {
-      const storeAuth = useStoreAuth();
-      console.log("storeAuth.user.id", storeAuth.user.id);
-      todosCollectionRef = collection(db, "todosc");
-      todosCollectionQuery = query(
-        todosCollectionRef,
-        orderBy("datecreated", "desc")
-      );
-      //initialize database refs
-      this.getTodos();
+      // Ethers
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      console.log(provider, signer);
+
+      // this.getTodos();
     },
     async getTodos() {
       this.todosLoaded = false;
@@ -69,17 +62,8 @@ export const useStoreTodos = defineStore("storeTodos", {
         }
       );
     },
-    clearTodos() {
-      this.todos = [];
-      if (getTodosSnapshot) getTodosSnapshot(); //unsubscribe from any active listener
-    },
-    async addTodo(content) {
-      let datecreated = new Date();
-
-      await addDoc(todosCollectionRef, {
-        content: content,
-      });
-    },
+    clearTodos() {},
+    async addTodo(content) {},
     async deleteTodo(idToDelete) {},
     async updateTodo(id, content, duedate, priority, category, reward) {},
     async isfavUpdateTodo(id, isfav) {},
