@@ -1,5 +1,7 @@
 # vue_walletconnect_web3 --- "ONGOING WORK" - Boilerplate for Web3 with Vue
 
+```sh
+
 Vue 3 + Vite
 -Pinia state management
 -Vue router for SPA
@@ -8,6 +10,7 @@ Vue 3 + Vite
 -VueUse
 
 .env.env must be renamed to .env
+```
 
 ## Recommended IDE Setup
 
