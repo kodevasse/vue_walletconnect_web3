@@ -1,23 +1,6 @@
 import { defineStore } from "pinia";
 import { ethers } from "ethers";
 
-// import {
-//   collection,
-//   onSnapshot,
-//   doc,
-//   deleteDoc,
-//   updateDoc,
-//   addDoc,
-//   query,
-//   orderBy,
-// } from "firebase/firestore";
-// import { db } from "@/js/firebase";
-// import { useStoreAuth } from "@/stores/storeAuth";
-
-// let todosCollectionRef = [];
-// let todosCollectionQuery = [];
-// let getTodosSnapshot = null;
-
 export const useStoreWallet = defineStore("storeWallet", {
   state: () => {
     return {
@@ -33,7 +16,7 @@ export const useStoreWallet = defineStore("storeWallet", {
       walletLoaded: false,
       walletNotFound: false,
       isConnected: null,
-      manualDisconnect: false,
+
       shortBalance: function () {
         if (this.wallet.balance.length !== 0) {
           return this.wallet.balance.toFixed(4);
@@ -45,9 +28,9 @@ export const useStoreWallet = defineStore("storeWallet", {
         if (this.wallet.address !== undefined) {
           if (this.wallet.address.length > 2) {
             return (
-              this.wallet.address.slice(1, 6) +
-              "........." +
-              this.wallet.address.slice(35, 42)
+              this.wallet.address.slice(0, 6) +
+              "..." +
+              this.wallet.address.slice(38, 42)
             );
           } else {
             return "";
@@ -64,7 +47,7 @@ export const useStoreWallet = defineStore("storeWallet", {
         "my-storage",
         "disconnected"
       );
-      console.log(manualDisconnected);
+      console.log("saved to localstorage");
       // Ethers get signer and provider
       if (window.ethereum) {
         (this.provider = await new ethers.providers.Web3Provider(
@@ -103,14 +86,14 @@ export const useStoreWallet = defineStore("storeWallet", {
       } else {
         this.walletNotFound = true;
       }
-      this.isConnected();
+      await this.isConnected();
     },
     async connectWallet() {
       const manualDisconnected = localStorage.getItem(
         "my-storage",
         "disconnected"
       );
-      console.log(manualDisconnected);
+      console.log("got item from localstorage", manualDisconnected);
       this.walletLoaded = false;
 
       this.wallet.accounts = await this.provider.send(
@@ -121,8 +104,9 @@ export const useStoreWallet = defineStore("storeWallet", {
         console.log("An error occurred" + this.wallet.accounts);
       }
       this.wallet.address = this.wallet.accounts[0];
-      this.initAccount();
+      await this.initAccount();
       localStorage.removeItem("my-storage", "disconnected");
+      console.log("removed from localstorage");
       this.walletLoaded = true;
     },
     // Init the account information
@@ -170,19 +154,21 @@ export const useStoreWallet = defineStore("storeWallet", {
       this.isConnected = null;
       this.manualDisconnect = true;
       localStorage.setItem("my-storage", "disconnected");
+      console.log("added to localstorage");
     },
-    clearTodos() {},
-    async addTodo(content) {},
-    async deleteTodo(idToDelete) {},
-    async updateTodo(id, content, duedate, priority, category, reward) {},
-    async isfavUpdateTodo(id, isfav) {},
-    async doneUpdateTodo(id, done) {},
+    // rest is only for future functions to be implemented
+    clearWallet() {},
+    async addWallet(content) {},
+    async delete(idToDelete) {},
+    async update(id, content, duedate, priority, category, reward) {},
+    async asfav(id, isfav) {},
+    async doneUpade(id, done) {},
   },
   getters: {
-    getTodoContent: (state) => {
-      return null;
+    getAccountConnected: (state) => {
+      return state.wallet.accounts.length;
     },
-    totalTodosTodo: (state) => {},
-    totalCharactersTodo: (state) => {},
+    totalNfts: (state) => {},
+    totalTransactions: (state) => {},
   },
 });
