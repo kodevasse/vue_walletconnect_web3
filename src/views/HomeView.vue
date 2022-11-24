@@ -148,22 +148,26 @@ onMounted(async () => {
 });
 
 // Ethereum Window
-window.ethereum.on("accountsChanged", async function (accounts) {
-  if (accounts.length !== 0) {
-    console.log(accounts);
-    await storeWallet.initWallet();
-    updateEthAvatar();
-  } else {
-    console.log("disconnected added to localstorage", accounts);
-    localStorage.setItem("my-storage", "disconnected");
+if (window.ethereum) {
+  window.ethereum.on("accountsChanged", async function (accounts) {
+    if (accounts.length !== 0) {
+      console.log(accounts);
+      await storeWallet.initWallet();
+      updateEthAvatar();
+    } else {
+      console.log("disconnected added to localstorage", accounts);
+      localStorage.setItem("my-storage", "disconnected");
 
-    storeWallet.disconnectWallet();
-  }
-  // Time to reload your interface with accounts[0]!
-});
-window.ethereum.on("chainChanged", function (chainId) {
-  storeWallet.netWorkChanged();
-});
+      storeWallet.disconnectWallet();
+    }
+    // Time to reload your interface with accounts[0]!
+  });
+  window.ethereum.on("chainChanged", function (chainId) {
+    storeWallet.netWorkChanged();
+  });
+} else {
+  alert("Please install a Web3 Wallet, Metamask");
+}
 
 const networkDisplay = computed(() => {
   if (storeWallet.walletLoaded) {
