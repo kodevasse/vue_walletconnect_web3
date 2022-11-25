@@ -11,6 +11,8 @@ Vue 3 + Vite:
 
 #Added 22.11.22 ->>
 -ethers.js
+-Alchemy SDK
+-jazzicon
 
 
 Practical info:

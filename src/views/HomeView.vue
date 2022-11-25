@@ -119,7 +119,6 @@ const updateEthAvatar = () => {
   section.innerHTML = "";
   section.appendChild(el);
 };
-onMounted(() => {});
 
 const buttonText = computed(() => {
   if (!storeWallet.walletLoaded) return "Connect Wallet";
