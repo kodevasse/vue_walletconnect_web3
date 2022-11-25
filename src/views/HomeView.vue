@@ -96,12 +96,14 @@
     >
       Testfunctions
     </button>
+    <Nfts />
   </main>
 </template>
 
 <script setup>
 import { useMouse, usePreferredDark } from "@vueuse/core";
 import { useStoreWallet } from "@/stores/storeWallet.js";
+import Nfts from "@/components/alchemy/Nfts.vue";
 import { computed, ref, watch, onMounted, onActivated } from "vue";
 import jazzicon from "jazzicon";
 
