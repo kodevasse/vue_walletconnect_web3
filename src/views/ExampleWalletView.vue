@@ -21,7 +21,8 @@
       v-if="address"
       class="flex flex-col h-full bg-gray-800 text-white rounded-lg p-1"
     >
-      <span class="indicator-item indicator-top indicator-center badge badge-primary"
+      <span
+        class="indicator-item indicator-top indicator-center badge badge-primary"
         >Ethers.js</span
       >
       <span class="flex flex-col">
@@ -77,7 +78,8 @@
       v-if="address"
       class="flex flex-col h-full bg-gray-800 text-white rounded-lg p-1"
     >
-      <span class="indicator-item indicator-top indicator-center badge badge-secondary"
+      <span
+        class="indicator-item indicator-top indicator-center badge badge-secondary"
         >AlchemyAPI</span
       >
 
@@ -91,7 +93,9 @@
           <a
             target="_blank"
             :href="`https://mumbai.polygonscan.com/address/${nft.contract.address}`"
-            ><div class="flex flex-row flex-wrap align-top justify-start gap-x-2">
+            ><div
+              class="flex flex-row flex-wrap align-top justify-start gap-x-2"
+            >
               <span class="bg-cyan-900 text-sm px-2 rounded-md mt-1"
                 >Title: {{ nft.title }}</span
               >
@@ -216,6 +220,7 @@ const switchAccount = async () => {
 
 const isConnected = async () => {
   const accounts = await wallet.getAccounts();
+  await provider.send("eth_requestAccounts", []);
   address.value = accounts[0];
   initAccount();
   if (typeof accounts === "string") return false;
@@ -272,9 +277,11 @@ const InitAPICall = async () => {
   });
   // The wallet address / token we want to query for:
   const ownerAddr = address.value;
-  const balances = await alchemy.core.getTokenBalances(ownerAddr).then((response) => {
-    return response.tokenBalances;
-  });
+  const balances = await alchemy.core
+    .getTokenBalances(ownerAddr)
+    .then((response) => {
+      return response.tokenBalances;
+    });
 
   console.log(balances);
 

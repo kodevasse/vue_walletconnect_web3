@@ -8,9 +8,13 @@
   },
   "dependencies": {
     "@vueuse/core": "^9.5.0",
+    "alchemy-sdk": "^2.2.3",
     "daisyui": "^2.41.0",
+    "ethers": "^5.7.2",
+    "jazzicon": "^1.5.0",
     "pinia": "^2.0.23",
     "vue": "^3.2.41",
+    "vue-jazzicon-3": "^0.0.5",
     "vue-router": "^4.1.5"
   },
   "devDependencies": {
