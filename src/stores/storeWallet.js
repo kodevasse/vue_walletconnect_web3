@@ -9,7 +9,7 @@ export const useStoreWallet = defineStore("storeWallet", {
         address: "",
         balance: 0,
         chainId: null,
-        chainName: "",
+        chainName: null,
       },
       provider: null,
       signer: null,

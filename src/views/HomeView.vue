@@ -79,6 +79,15 @@
         <p v-else>Address Balance:</p>
       </div>
     </div>
+
+    <button
+      class="btn btn-error mx-auto flex justify-center hidden"
+      @click="updateEthAvatar()"
+      disabled
+    >
+      Testfunctions
+    </button>
+    <Nfts class="mb-5" />
     <div
       class="p-4 flex flex-col mx-auto bg-neutral bg-opacity-10 w-64 text-center rounded-md border mb-2"
     >
@@ -88,15 +97,6 @@
       <p>-NFT + Tokens</p>
       <p>-+++</p>
     </div>
-
-    <button
-      class="btn btn-error mx-auto flex justify-center hidden"
-      @click="updateEthAvatar()"
-      disabled
-    >
-      Testfunctions
-    </button>
-    <Nfts />
   </main>
 </template>
 
